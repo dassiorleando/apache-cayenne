@@ -47,18 +47,16 @@ public class AuthorService {
      * @return      the matched author or null if not existing
      */
     public Author findById(int id) {
-        // Find an author by it’s ID
         Author author = Cayenne.objectForPK(context, Author.class, id);
         return author;
     }
 
     /**
-     * Looking fo an author by name
+     * Looking for an author by name
      * @param name  the name to look up with
      * @return      the first matched author or null if not existing
      */
     public Author findByName(String name) {
-        // Looking for an author by name
         Author foundAuthor = ObjectSelect.query(Author.class)
                 .where(Author.NAME.eq(name))
                 .selectOne(this.context);
@@ -89,7 +87,7 @@ public class AuthorService {
     public List<Author> findByNameEndWith(String partName) {
         // All authors with names ending with "partName"
         List<Author> authorsEnd = ObjectSelect.query(Author.class)
-                .where(Author.NAME.endsWith("aul"))
+                .where(Author.NAME.endsWith(partName))
                 .select(context);
 
         return authorsEnd;
@@ -111,7 +109,7 @@ public class AuthorService {
      * Update an author
      * @param id        the author's ID
      * @param newName   the new name to set
-     * @return          true for a successful operation and false for bad data provided
+     * @return          true for a successful operation and false unknown author
      */
     public boolean update(int id, String newName) {
         if (StringUtils.isEmpty(newName)) return false;
@@ -130,7 +128,7 @@ public class AuthorService {
     /**
      * Attach a fake article to the author
      * @param id    the author's ID
-     * @return      true for a successful operation and false for bad data provided
+     * @return      true for a successful operation and false unknown author
      */
     public boolean attachArticle(int id) {
         // Get the author to link with
@@ -155,7 +153,7 @@ public class AuthorService {
     /**
      * Delete an author
      * @param id author's ID
-     * @return   true for a successful operation and false for bad data provided
+     * @return   true for a successful operation and false unknown author
      */
     public boolean delete(int id) {
         // Get the author to delete
@@ -177,7 +175,7 @@ public class AuthorService {
         // SQL delete queries for author deletion
         SQLTemplate deleteAuthors = new SQLTemplate(Author.class, "delete from author");
 
-        // Applying the query
+        // Applying the deletion query
         context.performGenericQuery(deleteAuthors);
     }
 
